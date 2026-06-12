@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operation: Dead Ball — KCS Curiosity Day 2026</title>
+<style>
+:root {
+  --blue:    #0A3D62;
+  --orange:  #F5A623;
+  --green:   #2ECC71;
+  --red:     #E74C3C;
+  --bg:      #F4F6F8;
+  --white:   #FFFFFF;
+  --grey:    #D0D3D4;
+  --charcoal:#333333;
+  --muted:   #888888;
+  --code-bg: #0D202F;
+  --font: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono: 'Courier New',Courier,monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--charcoal);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--blue);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+.header-badge {
+  background: var(--orange);
+  color: var(--blue);
+  font-weight: 900;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.header h1 {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex: 1;
+  line-height: 1.2;
+}
+.header-kcs {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+/* ── TAB NAV ── */
+.tab-nav {
+  background: var(--blue);
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1;
+  min-width: 72px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 9px 6px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.tab-btn.active {
+  color: var(--white);
+  border-bottom-color: var(--orange);
+  background: rgba(255,255,255,0.07);
+}
+.tab-btn:hover:not(.active) {
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.04);
+}
+
+/* ── SECTIONS ── */
+.section { display: none; padding: 18px 14px 40px; max-width: 640px; margin: 0 auto; }
+.section.active { display: block; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.round-badge {
+  background: var(--orange);
+  color: var(--blue);
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--blue);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 22px 18px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '⚽';
+  position: absolute;
+  right: -8px;
+  bottom: -12px;
+  font-size: 90px;
+  opacity: 0.07;
+  line-height: 1;
+}
+.classified {
+  display: inline-block;
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  transform: rotate(-1.5deg);
+}
+.hero h2 {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero h2 span { color: var(--orange); }
+.hero p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.82);
+}
+
+/* ── ROUND SUMMARY CARDS ── */
+.round-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.round-card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 14px;
+  border-top: 3px solid var(--blue);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.round-card.r2 { border-top-color: var(--orange); }
+.round-card .rc-num {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--blue);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.round-card.r2 .rc-num { color: var(--orange); }
+.round-card .rc-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--charcoal);
+  margin-bottom: 5px;
+}
+.round-card p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── ANNOTATIONS ── */
+.anno {
+  border-left: 4px solid var(--blue);
+  background: #f0f7ff;
+  border-radius: 0 8px 8px 0;
+  padding: 11px 13px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  margin-bottom: 13px;
+}
+.anno.warn {
+  border-left-color: var(--orange);
+  background: #fff8e6;
+}
+.anno.success {
+  border-left-color: var(--green);
+  background: #eafaf1;
+}
+.anno strong { font-weight: 800; }
+
+/* ── INTERCEPTED MESSAGE ── */
+.intercept {
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 13px;
+  position: relative;
+  overflow: hidden;
+}
+.intercept::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--orange);
+}
+.signal-label {
+  font-size: 9px;
+  color: var(--orange);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+  font-family: var(--mono);
+}
+.enc-badge {
+  display: inline-block;
+  background: var(--red);
+  color: var(--white);
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 9px;
+  border-radius: 3px;
+  letter-spacing: 0.1em;
+  margin-bottom: 9px;
+  font-family: var(--font);
+}
+.cipher-text {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--orange);
+  letter-spacing: 0.1em;
+  word-break: break-all;
+  line-height: 1.9;
+}
+.intercept-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* ── CIPHER TOOL ── */
+.tool-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
+}
+.tool-textarea {
+  width: 100%;
+  border: 2px solid var(--grey);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+  min-height: 75px;
+  color: var(--charcoal);
+  background: var(--bg);
+  transition: border-color 0.18s;
+  margin-bottom: 11px;
+}
+.tool-textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: var(--white);
+}
+.tool-output {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--orange);
+  letter-spacing: 0.07em;
+  min-height: 55px;
+  word-break: break-all;
+  line-height: 1.75;
+  margin-bottom: 11px;
+}
+
+/* ── MODE TOGGLE ── */
+.mode-toggle {
+  display: flex;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 13px;
+  border: 1.5px solid var(--grey);
+}
+.mode-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.mode-btn.active {
+  background: var(--blue);
+  color: var(--white);
+}
+
+/* ── SHIFT SLIDER ── */
+.shift-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 13px;
+}
+.shift-row label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal);
+  white-space: nowrap;
+  min-width: 36px;
+}
+.shift-slider {
+  flex: 1;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.shift-val {
+  background: var(--blue);
+  color: var(--white);
+  font-weight: 900;
+  font-size: 14px;
+  width: 34px;
+  text-align: center;
+  padding: 3px 0;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+/* ── KEYWORD INPUT ── */
+.key-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+.key-row label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal);
+  white-space: nowrap;
+}
+.key-input {
+  flex: 1;
+  border: 2px solid var(--grey);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--charcoal);
+  background: var(--bg);
+  transition: border-color 0.18s;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.key-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: var(--white);
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-block;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.btn:hover { background: #0d4f80; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-orange { background: var(--orange); color: var(--blue); }
+.btn-orange:hover { background: #e8971a; }
+.btn-ghost {
+  background: none;
+  color: var(--muted);
+  border: 2px dashed var(--grey);
+}
+.btn-ghost:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: none;
+  transform: none;
+}
+.btn-sm { padding: 7px 13px; font-size: 12px; }
+.btn-full { width: 100%; padding: 13px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+
+/* ── REVEAL / ANSWER ── */
+.reveal-wrap { margin-top: 10px; }
+.reveal-body {
+  display: none;
+  margin-top: 10px;
+  padding: 13px;
+  border-left: 4px solid var(--green);
+  background: #eafaf1;
+  border-radius: 0 8px 8px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.reveal-body.open { display: block; }
+.reveal-answer {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--blue);
+  font-weight: 700;
+  margin-bottom: 7px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+/* ── HOW IT WORKS ── */
+.steps { margin-top: 4px; }
+.step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+.step:last-child { margin-bottom: 0; }
+.step-num {
+  background: var(--blue);
+  color: var(--white);
+  font-weight: 900;
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.step-text strong { font-weight: 800; }
+
+/* ── GO DEEPER (details/summary) ── */
+.deeper {
+  margin-top: 12px;
+  border-top: 1.5px solid var(--bg);
+  padding-top: 12px;
+}
+.deeper summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--blue);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1.5px solid var(--blue);
+  background: none;
+  transition: all 0.15s;
+  user-select: none;
+}
+.deeper summary::-webkit-details-marker { display: none; }
+.deeper summary::before {
+  content: '↓';
+  font-size: 13px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.deeper[open] summary::before { transform: rotate(180deg); }
+.deeper summary:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+.deeper-body {
+  margin-top: 13px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--charcoal);
+}
+.deeper-body p { margin-bottom: 10px; }
+.deeper-body p:last-child { margin-bottom: 0; }
+.deeper-body strong { font-weight: 800; }
+.deeper-body em { font-style: italic; }
+
+/* citation block inside deeper */
+.cite-block {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1.5px solid var(--grey);
+}
+.cite-item {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 7px;
+  padding-left: 10px;
+  border-left: 2px solid var(--grey);
+}
+.cite-item:last-child { margin-bottom: 0; }
+.cite-item strong { color: var(--charcoal); font-weight: 700; }
+.cite-item a {
+  color: var(--blue);
+  text-decoration: none;
+  word-break: break-all;
+}
+.cite-item a:hover { text-decoration: underline; }
+sup {
+  font-size: 10px;
+  color: var(--blue);
+  font-weight: 700;
+  vertical-align: super;
+  line-height: 0;
+}
+
+/* ── MAKE YOUR OWN ── */
+.share-box {
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--orange);
+  letter-spacing: 0.09em;
+  word-break: break-all;
+  line-height: 1.8;
+  min-height: 50px;
+  margin-bottom: 11px;
+}
+.copy-confirm {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 700;
+  display: none;
+  margin-left: 8px;
+}
+.copy-confirm.show { display: inline; }
+
+/* ── TIMELINE GRID ── */
+.timeline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+.tl-card {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 3px solid var(--blue);
+}
+.tl-card .tl-era {
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.tl-card p {
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* ── GCHQ CARD ── */
+.gchq-card {
+  background: var(--blue);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.gchq-card .card-title { color: var(--orange); }
+.gchq-card p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 10px;
+}
+.gchq-card p:last-of-type { margin-bottom: 0; }
+.gchq-card .deeper summary {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+.gchq-card .deeper summary:hover {
+  background: var(--orange);
+  color: var(--blue);
+}
+.gchq-card .deeper-body {
+  color: rgba(255,255,255,0.88);
+}
+.gchq-card .cite-block { border-top-color: rgba(255,255,255,0.2); }
+.gchq-card .cite-item {
+  border-left-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.6);
+}
+.gchq-card .cite-item strong { color: rgba(255,255,255,0.85); }
+.gchq-card .cite-item a { color: var(--orange); }
+.gchq-card .deeper { border-top-color: rgba(255,255,255,0.12); }
+
+/* ── BUILT BY ── */
+.built-by {
+  text-align: center;
+  padding: 16px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.built-by strong { color: var(--charcoal); font-weight: 700; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 20px 14px;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--grey);
+  margin-top: 10px;
+}
+
+@media (max-width: 380px) {
+  .timeline { grid-template-columns: 1fr; }
+  .round-grid { grid-template-columns: 1fr; }
+  .hero h2 { font-size: 17px; }
+  .header h1 { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">KCS 2026</div>
+    <h1>Operation: Dead Ball 🕵️</h1>
+    <div class="header-kcs">Curiosity<br>Day</div>
+  </div>
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('mission')">Mission</button>
+    <button class="tab-btn" onclick="showTab('round1')">Round 1</button>
+    <button class="tab-btn" onclick="showTab('round2')">Round 2</button>
+    <button class="tab-btn" onclick="showTab('own')">Your Own</button>
+    <button class="tab-btn" onclick="showTab('truth')">The Truth</button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 1 — MISSION
+════════════════════════════════════ -->
+<div class="section active" id="tab-mission">
+
+  <div class="hero">
+    <div class="classified">Classified</div>
+    <h2>The World Cup has a <span>spy problem.</span></h2>
+    <p>It's 2026. Rival nations are intercepting team communications. Tactics, team selections, transfer secrets — all transmitted in code. Your job is to crack them.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Your mission</div>
+    <p style="font-size:14px;line-height:1.65;margin-bottom:10px;">Intelligence agents have intercepted two encrypted messages from inside a World Cup squad. The first uses a simple cipher. The second uses something much harder.</p>
+    <p style="font-size:14px;line-height:1.65;">You won't be given the key. That's the point. Work it out.</p>
+  </div>
+
+  <div class="round-grid">
+    <div class="round-card">
+      <div class="rc-num">01</div>
+      <div class="rc-label">Caesar</div>
+      <p>A classic cipher. Shifts every letter by a fixed number. Used by Julius Caesar himself.</p>
+    </div>
+    <div class="round-card r2">
+      <div class="rc-num">02</div>
+      <div class="rc-label">Vigenère</div>
+      <p>Harder. Uses a keyword instead of a single shift. Stumped cryptanalysts for 300 years.</p>
+    </div>
+  </div>
+
+  <div class="anno warn">
+    <strong>One rule:</strong> don't google the answers. You'll get more out of this by struggling with it than by looking it up. The struggle is the point.
+  </div>
+
+  <button class="btn btn-orange btn-full" onclick="showTab('round1')">Start Round 1 →</button>
+
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 2 — ROUND 1 (CAESAR)
+════════════════════════════════════ -->
+<div class="section" id="tab-round1">
+
+  <div class="card">
+    <div class="card-title">Intercepted message <span class="round-badge">Round 1</span></div>
+    <div class="intercept">
+      <div class="signal-label">Signal intercepted — 03:14 UTC</div>
+      <div class="enc-badge">ENCRYPTED</div>
+      <div class="cipher-text">ABIZB BPM ABZQSMZA. LZWX BPM EQVOMZ. XZMAA PQOP IVL NIAB. VW UQABISMA BWLIG.</div>
+    </div>
+    <p class="intercept-note">This message was sent by a manager to his coaching staff the night before the quarter-final. Crack it and you'll know exactly who's starting.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Decoder</div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="r1-dec-btn" onclick="setR1Mode('decrypt')">Decrypt</button>
+      <button class="mode-btn" id="r1-enc-btn" onclick="setR1Mode('encrypt')">Encrypt</button>
+    </div>
+
+    <div class="shift-row">
+      <label>Shift</label>
+      <input type="range" class="shift-slider" id="r1-shift" min="1" max="25" value="3" oninput="r1Update()">
+      <div class="shift-val" id="r1-shift-val">3</div>
+    </div>
+
+    <div class="tool-label">Your text</div>
+    <textarea class="tool-textarea" id="r1-input" placeholder="Paste the intercepted message here, or type your own..." oninput="r1Update()">ABIZB BPM ABZQSMZA. LZWX BPM EQVOMZ. XZMAA PQOP IVL NIAB. VW UQABISMA BWLIG.</textarea>
+
+    <div class="tool-label">Output</div>
+    <div class="tool-output" id="r1-output"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" id="r1-hint-btn" onclick="toggleHint()">I'm stuck</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleReveal('r1-reveal', this)">Show answer</button>
+    </div>
+
+    <div class="reveal-body" id="r1-hint" style="border-left-color:var(--orange);background:#fff8e6;margin-top:10px;">
+      <strong>Hint:</strong> look at the short words first. A single letter on its own is almost always A or I. A two-letter word might be IN, IS, AT, or OR. Try a few shifts and see what makes sense.
+    </div>
+
+    <div class="reveal-wrap">
+      <div class="reveal-body" id="r1-reveal">
+        <div class="reveal-answer">Shift: 8 — START THE STRIKERS. DROP THE WINGER. PRESS HIGH AND FAST. NO MISTAKES TODAY.</div>
+        <p style="font-size:13px;line-height:1.6;margin-top:8px;">The shift is 8 — every letter in the original was moved 8 places forward in the alphabet. To decrypt, you shift 8 places back. Caesar himself used a shift of 3. The principle is exactly the same.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">How it works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Take the alphabet. Assign each letter a number: A=0, B=1, C=2 ... Z=25.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">To encrypt the letter <strong>P</strong> with a shift of <strong>8</strong>: P is position 15. Add 8. That's 23. Position 23 is <strong>X</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">If you go past Z (position 25), wrap back round to A. So Z + 1 = A. This is called modular arithmetic — the same maths your phone uses to keep time.</div>
+      </div>
+    </div>
+    <div class="anno warn" style="margin-top:14px;margin-bottom:0;">
+      <strong>Why is it weak?</strong> There are only 25 possible shifts. A computer can try all of them in a fraction of a second. Even by hand it's crackable in minutes — which is exactly what you just did.
+    </div>
+  </div>
+
+  <button class="btn btn-orange btn-full" onclick="showTab('round2')">Round 2 →</button>
+
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 3 — ROUND 2 (VIGENÈRE)
+════════════════════════════════════ -->
+<div class="section" id="tab-round2">
+
+  <div class="card">
+    <div class="card-title">Intercepted message <span class="round-badge">Round 2</span></div>
+    <div class="intercept">
+      <div class="signal-label">Signal intercepted — 06:47 UTC — priority alpha</div>
+      <div class="enc-badge">ENCRYPTED — HIGH GRADE</div>
+      <div class="cipher-text">YHAJ ICMAGQT TT REQKBCP. RCOV LCR ENS CZABTPX OTEGQK. EXISE ZVE RGAE ARON.</div>
+    </div>
+    <p class="intercept-note">This one's different. The same letter doesn't always encrypt to the same thing. That means a simple frequency count won't crack it. You need the keyword.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Decoder</div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="r2-dec-btn" onclick="setR2Mode('decrypt')">Decrypt</button>
+      <button class="mode-btn" id="r2-enc-btn" onclick="setR2Mode('encrypt')">Encrypt</button>
+    </div>
+
+    <div class="key-row">
+      <label>Keyword</label>
+      <input type="text" class="key-input" id="r2-key" placeholder="Try a word..." oninput="r2Update()" maxlength="20">
+    </div>
+
+    <div class="tool-label">Your text</div>
+    <textarea class="tool-textarea" id="r2-input" placeholder="Paste the intercepted message here..." oninput="r2Update()">YHAJ ICMAGQT TT REQKBCP. RCOV LCR ENS CZABTPX OTEGQK. EXISE ZVE RGAE ARON.</textarea>
+
+    <div class="tool-label">Output</div>
+    <div class="tool-output" id="r2-output"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="toggleReveal('r2-reveal', this)">Show answer</button>
+    </div>
+
+    <div class="reveal-wrap">
+      <div class="reveal-body" id="r2-reveal">
+        <div class="reveal-answer">Keyword: GOAL — STAY COMPACT IN DEFENCE. LOOK FOR THE COUNTER ATTACK. TRUST THE GAME PLAN.</div>
+        <p style="font-size:13px;line-height:1.6;margin-top:8px;">The keyword is GOAL. Each letter sets a different shift: G=6, O=14, A=0, L=11. The keyword repeats across the message, so the same letter in the plain text becomes a different cipher letter depending on its position. That's what makes it so much harder to crack.</p>
+      </div>
+    </div>
+
+    <div class="anno warn" style="margin-top:11px;">
+      <strong>This is genuinely hard.</strong> Don't expect to crack it by guessing. Think about what a football manager might use as a keyword. What words matter to them?
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">How it works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Choose a keyword — say <strong>GOAL</strong>. Write it out repeatedly over your message: G O A L G O A L G O A L ...</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Each letter of the keyword gives a different shift. G=6, O=14, A=0, L=11. The first letter of your message shifts by 6, the second by 14, the third by 0 (no change), the fourth by 11.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">The letter E might become K in one place and S in another — because the shift changes. That breaks the frequency analysis that cracks Caesar.</div>
+      </div>
+    </div>
+    <div class="anno" style="margin-top:14px;margin-bottom:0;">
+      <strong>Why was this so powerful?</strong> For nearly 300 years, from about 1550 to 1863, the Vigenère cipher was considered unbreakable. It was called <em>le chiffre indéchiffrable</em> — the indecipherable cipher. It was finally cracked by a Prussian army officer named Friedrich Kasiski, who found a pattern in repeated keyword sequences.
+    </div>
+  </div>
+
+  <button class="btn btn-orange btn-full" onclick="showTab('own')">Make your own →</button>
+
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 4 — MAKE YOUR OWN
+════════════════════════════════════ -->
+<div class="section" id="tab-own">
+
+  <div class="card">
+    <div class="card-title">Make your own encrypted message</div>
+    <p style="font-size:14px;line-height:1.65;margin-bottom:14px;">Encrypt something and send it to someone. They'll need the key to decrypt it — keep that separate.</p>
+
+    <div class="tool-label">Choose your cipher</div>
+    <div class="mode-toggle" style="margin-bottom:14px;">
+      <button class="mode-btn active" id="own-caesar-btn" onclick="setOwnCipher('caesar')">Caesar</button>
+      <button class="mode-btn" id="own-vig-btn" onclick="setOwnCipher('vigenere')">Vigenère</button>
+    </div>
+
+    <div id="own-caesar-controls">
+      <div class="shift-row">
+        <label>Shift</label>
+        <input type="range" class="shift-slider" id="own-shift" min="1" max="25" value="7" oninput="ownUpdate()">
+        <div class="shift-val" id="own-shift-val">7</div>
+      </div>
+    </div>
+
+    <div id="own-vig-controls" style="display:none;">
+      <div class="key-row">
+        <label>Keyword</label>
+        <input type="text" class="key-input" id="own-key" placeholder="Enter a keyword..." oninput="ownUpdate()" maxlength="20">
+      </div>
+    </div>
+
+    <div class="tool-label">Your message</div>
+    <textarea class="tool-textarea" id="own-input" placeholder="Type your secret message here..." oninput="ownUpdate()"></textarea>
+
+    <div class="tool-label">Encrypted — copy and send this</div>
+    <div class="share-box" id="own-output">Your encrypted message will appear here.</div>
+
+    <div class="btn-row">
+      <button class="btn btn-sm" onclick="copyOwn()">Copy message</button>
+      <span class="copy-confirm" id="copy-confirm">Copied ✓</span>
+    </div>
+  </div>
+
+  <div class="anno warn">
+    <strong>Remember:</strong> send the encrypted message to your friend, but tell them the key separately — in person, or via a different channel. That's exactly what real spies do.
+  </div>
+
+  <button class="btn btn-orange btn-full" onclick="showTab('truth')">Find out what this is actually about →</button>
+
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 5 — THE TRUTH
+════════════════════════════════════ -->
+<div class="section" id="tab-truth">
+
+  <!-- Card 1 — Cryptanalysis -->
+  <div class="card">
+    <div class="card-title">So what was that actually about?</div>
+    <p style="margin-bottom:10px;">What you just did — spotting patterns, testing hypotheses, working backwards from known structure — is exactly what cryptanalysts do. Cryptanalysis is a branch of computer science.</p>
+    <p>The ciphers you cracked are ancient. The principles behind them are not. They are the same ones that secure every message you have ever sent.</p>
+    <details class="deeper">
+      <summary>Go deeper</summary>
+      <div class="deeper-body">
+        <p>Cryptanalysis is the science of breaking codes without knowing the key. It sits at the intersection of mathematics, linguistics, and computer science — and it has shaped history more than almost any other discipline most people have never heard of.</p>
+        <p>The core skill is not memorising facts. It is noticing what should be there but isn't, or what appears too often to be random. In a Caesar cipher, the letter E — the most common letter in English — shows up shifted by the same amount every time. In a Vigenère cipher, repeated words produce repeated ciphertext at predictable intervals. In Enigma, German operators' habits leaked structure into what should have been noise.</p>
+        <p>This is called <strong>frequency analysis</strong> and <strong>known-plaintext attack</strong> — two of the oldest and most powerful tools in cryptanalysis. They work because humans are predictable, and because language has structure. Any cipher that fails to destroy that structure completely is vulnerable.</p>
+        <p>Modern encryption — AES, RSA, elliptic curve — is designed to produce output that is statistically indistinguishable from random noise, even if you know exactly how the algorithm works. That is what makes it hard. Not secrecy about the method, but mathematical complexity that makes brute force computationally impossible.</p>
+        <p>The field that studies all of this is called <strong>cryptology</strong> — it covers both cryptography (making codes) and cryptanalysis (breaking them). If this appeals to you, it sits firmly within computer science, mathematics, and information security.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Card 2 — GCHQ -->
+  <div class="gchq-card">
+    <div class="card-title">GCHQ</div>
+    <p>GCHQ — Government Communications Headquarters — is the UK's signals intelligence and cyber agency. The kind of thinking you did today is exactly what they recruit for.</p>
+    <p>Their CyberFirst programme offers free courses for students aged 12–17, a university bursary, and a Degree Level Apprenticeship in Cyber Security. All run by the National Cyber Security Centre, part of GCHQ.<sup>[2][3]</sup></p>
+    <p>They don't care where you went to school. They care how you think.</p>
+    <details class="deeper">
+      <summary>Go deeper</summary>
+      <div class="deeper-body">
+        <p>GCHQ was founded in 1919 as the Government Code and Cypher School — the same organisation that ran Bletchley Park. It was renamed GCHQ in 1946 and is now based in Cheltenham. Its mission covers signals intelligence, cybersecurity, and protecting UK government systems.</p>
+        <p>The National Cyber Security Centre (NCSC), which sits within GCHQ, was set up in 2016. When a major UK organisation gets hit by a cyberattack — a hospital, a government department, a bank — NCSC is typically involved in the response.</p>
+        <p>The CyberFirst programme exists because the UK has a significant shortage of people with the skills to work in this field. It is explicitly designed to reach students who might not think of themselves as "tech people." The courses cover cryptography, ethical hacking, networking, and digital forensics. No prior experience is required.</p>
+        <p>Beyond GCHQ, the same skills are in demand across defence, finance, healthcare, and technology. Cybersecurity is one of the fastest-growing employment sectors in the UK.</p>
+        <div class="cite-block">
+          <div class="cite-item"><strong>[2]</strong> National Cyber Security Centre — <em>CyberFirst Overview</em><br><a href="https://www.ncsc.gov.uk/cyberfirst/overview" target="_blank">ncsc.gov.uk/cyberfirst/overview</a></div>
+          <div class="cite-item"><strong>[3]</strong> GCHQ Careers — <em>CyberFirst</em><br><a href="https://www.gchq-careers.co.uk/cyberfirst.html" target="_blank">gchq-careers.co.uk/cyberfirst.html</a></div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Card 3 — Timeline -->
+  <div class="card">
+    <div class="card-title">From Julius Caesar to your WhatsApp</div>
+    <div class="timeline">
+      <div class="tl-card">
+        <div class="tl-era">Caesar — 58 BC</div>
+        <p>Used for military communications. A shift of 3. Considered unbreakable at the time.</p>
+      </div>
+      <div class="tl-card">
+        <div class="tl-era">Vigenère — 1553</div>
+        <p>Published by Giovan Bellaso — though the name that stuck was someone else's. Called <em>le chiffre indéchiffrable</em> for nearly 300 years.</p>
+      </div>
+      <div class="tl-card">
+        <div class="tl-era">Enigma — 1940s</div>
+        <p>Cracked at Bletchley Park by a team including Alan Turing. Some historians estimate it shortened the war by several years.<sup>[1]</sup></p>
+      </div>
+      <div class="tl-card">
+        <div class="tl-era">AES — Today</div>
+        <p>Used by WhatsApp, Signal, your bank. Would take longer than the age of the universe to brute-force.</p>
+      </div>
+    </div>
+    <details class="deeper">
+      <summary>Go deeper</summary>
+      <div class="deeper-body">
+        <p><strong>Caesar cipher.</strong> Julius Caesar didn't invent substitution ciphers, but he used them systematically. His shift of 3 worked because most of his enemies were illiterate, and those who weren't had no concept of cryptanalysis. Security through obscurity — it works until it doesn't. The Roman historian Suetonius documented the cipher around 100 AD, which is why we know about it at all.</p>
+        <p><strong>Vigenère cipher.</strong> The misattribution to Blaise de Vigenère is one of history's more persistent errors. Giovan Battista Bellaso published it in 1553. Vigenère published a different, stronger cipher in 1586 — but his name ended up attached to Bellaso's. Charles Babbage worked out how to crack it by 1854 but never published. One likely reason: he was serving as a cryptographic adviser to the British military during the Crimean War, and publishing would have told the enemy their codes were broken. Friedrich Kasiski published independently in 1863 and got the credit. The key insight: if the keyword repeats, so does the ciphertext pattern. Find the repeat, find the key length, and the cipher falls apart.</p>
+        <p><strong>Enigma.</strong> The Enigma machine was commercially available in the 1920s — you could buy one. The German military made it significantly more complex. Crucially, the Poles cracked an earlier version in 1932 and shared their methods with British intelligence in 1939, weeks before Germany invaded Poland. Bletchley Park built on Polish foundations, not from scratch.</p>
+        <p><strong>AES.</strong> Selected by the US National Institute of Standards and Technology in 2001 after an open international competition. The winning algorithm — Rijndael — was designed by two Belgian cryptographers, Joan Daemen and Vincent Rijmen. AES-256 uses a 256-bit key: 2²⁵⁶ possible keys. Even if every atom in the observable universe were a computer running since the Big Bang, you still wouldn't have checked them all. Quantum computers will eventually reduce that security margin, but AES-256 is still considered safe under realistic quantum threat models.</p>
+        <div class="cite-block">
+          <div class="cite-item"><strong>[1]</strong> Imperial War Museum — <em>How Alan Turing Cracked the Enigma Code</em><br><a href="https://www.iwm.org.uk/history/second-world-war/how-alan-turing-cracked-the-enigma-code" target="_blank">iwm.org.uk — Enigma and Alan Turing</a></div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Card 4 — Enigma -->
+  <div class="card">
+    <div class="card-title">The Enigma connection</div>
+    <p style="margin-bottom:10px;">Enigma was a machine, not just a cipher. It used rotating wheels to create a shifting key that changed with every single keypress — over 103 sextillion possible configurations.</p>
+    <p style="margin-bottom:10px;">The team at Bletchley Park didn't crack it by being cleverer than the Germans. They found a flaw. German operators often started messages the same way — the same weather report, the same sign-off. That repetition gave the codebreakers a foothold. Sound familiar? It's the same trick you used in Round 1.</p>
+    <div class="anno success" style="margin-bottom:0;">
+      <strong>The lesson:</strong> no cipher is unbreakable. Every system has a weakness. Finding it is the job.
+    </div>
+    <details class="deeper">
+      <summary>Go deeper</summary>
+      <div class="deeper-body">
+        <p>The Enigma machine worked through three (sometimes four) rotating wheels called rotors, a fixed reflector, and a plugboard. Each keypress advanced the rotors, so the same letter pressed twice produced two completely different outputs.</p>
+        <p>One critical design constraint: Enigma could never encrypt a letter as itself. Press A, and you would never get A back. This was considered a feature. It was a fatal weakness. It meant that if you knew a word somewhere in the message, you could rule out every position where that word's letters matched the ciphertext — dramatically narrowing the search.</p>
+        <p>This is a <strong>known-plaintext attack</strong>. German weather reports always contained "wetter." Daily messages often ended "Heil Hitler." These predictable phrases — called <strong>cribs</strong> — gave the codebreakers a lever.</p>
+        <p>Alan Turing designed an electromechanical machine called the <strong>Bombe</strong> to test thousands of possible Enigma configurations automatically. It didn't try every configuration — that would have been impossible. It used logical deduction to eliminate impossible ones and home in on plausible ones. At its peak, Bletchley Park was running over 200 Bombes and breaking up to 4,000 messages per day.<sup>[4]</sup></p>
+        <p>The intelligence produced was classified under the codename <strong>Ultra</strong>. Its existence was kept secret until 1974.</p>
+        <div class="cite-block">
+          <div class="cite-item"><strong>[4]</strong> Bletchley Park — <em>6 Facts About the Bombe</em><br><a href="https://www.bletchleypark.org.uk/our-story/6-facts-about-the-bombe/" target="_blank">bletchleypark.org.uk — The Bombe</a></div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Built by -->
+  <div class="card">
+    <div class="built-by">
+      <strong>King's College School, Wimbledon</strong><br>
+      Computer Science Department · Curiosity Day 2026<br>
+      Built to run offline on your phone — no app, no account, no tracking.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">KCS Computer Science · Curiosity Day 2026</div>
+
+<script>
+// ── TABS ──
+var tabIds = ['mission','round1','round2','own','truth'];
+function showTab(id) {
+  tabIds.forEach(function(t) {
+    document.getElementById('tab-' + t).classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn')[tabIds.indexOf(id)].classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── REVEAL TOGGLE ──
+function toggleReveal(id, btn) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  if (btn) btn.textContent = el.classList.contains('open') ? 'Hide answer' : 'Show answer';
+}
+
+// ── HINT TOGGLE ──
+function toggleHint() {
+  var el = document.getElementById('r1-hint');
+  var btn = document.getElementById('r1-hint-btn');
+  el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? 'Hide hint' : 'I\'m stuck';
+}
+
+// ── CAESAR ──
+function caesarChar(c, shift, encrypt) {
+  if (!/[a-zA-Z]/.test(c)) return c;
+  var base = c === c.toUpperCase() ? 65 : 97;
+  var n = c.charCodeAt(0) - base;
+  var s = encrypt ? shift : (26 - shift);
+  return String.fromCharCode(((n + s) % 26) + base);
+}
+function caesar(text, shift, encrypt) {
+  return text.split('').map(function(c) { return caesarChar(c, shift, encrypt); }).join('');
+}
+
+// ── VIGENÈRE ──
+function vigenere(text, key, encrypt) {
+  var cleanKey = (key || '').replace(/[^a-zA-Z]/g, '');
+  if (!cleanKey.length) return text;
+  var ki = 0;
+  return text.split('').map(function(c) {
+    if (!/[a-zA-Z]/.test(c)) return c;
+    var base = c === c.toUpperCase() ? 65 : 97;
+    var n = c.charCodeAt(0) - base;
+    var k = cleanKey[ki % cleanKey.length].toUpperCase().charCodeAt(0) - 65;
+    var s = encrypt ? k : (26 - k);
+    ki++;
+    return String.fromCharCode(((n + s) % 26) + base);
+  }).join('');
+}
+
+// ── ROUND 1 ──
+var r1Mode = 'decrypt';
+function setR1Mode(m) {
+  r1Mode = m;
+  document.getElementById('r1-dec-btn').classList.toggle('active', m === 'decrypt');
+  document.getElementById('r1-enc-btn').classList.toggle('active', m === 'encrypt');
+  r1Update();
+}
+function r1Update() {
+  var shift = parseInt(document.getElementById('r1-shift').value);
+  document.getElementById('r1-shift-val').textContent = shift;
+  var text = document.getElementById('r1-input').value;
+  document.getElementById('r1-output').textContent = caesar(text, shift, r1Mode === 'encrypt') || '—';
+}
+r1Update();
+
+// ── ROUND 2 ──
+var r2Mode = 'decrypt';
+function setR2Mode(m) {
+  r2Mode = m;
+  document.getElementById('r2-dec-btn').classList.toggle('active', m === 'decrypt');
+  document.getElementById('r2-enc-btn').classList.toggle('active', m === 'encrypt');
+  r2Update();
+}
+function r2Update() {
+  var key = document.getElementById('r2-key').value;
+  var text = document.getElementById('r2-input').value;
+  document.getElementById('r2-output').textContent = vigenere(text, key, r2Mode === 'encrypt') || '—';
+}
+
+// ── MAKE YOUR OWN ──
+var ownCipher = 'caesar';
+function setOwnCipher(c) {
+  ownCipher = c;
+  document.getElementById('own-caesar-btn').classList.toggle('active', c === 'caesar');
+  document.getElementById('own-vig-btn').classList.toggle('active', c === 'vigenere');
+  document.getElementById('own-caesar-controls').style.display = c === 'caesar' ? 'block' : 'none';
+  document.getElementById('own-vig-controls').style.display = c === 'vigenere' ? 'block' : 'none';
+  ownUpdate();
+}
+function ownUpdate() {
+  var text = document.getElementById('own-input').value;
+  var out = '';
+  if (ownCipher === 'caesar') {
+    var shift = parseInt(document.getElementById('own-shift').value);
+    document.getElementById('own-shift-val').textContent = shift;
+    out = caesar(text, shift, true);
+  } else {
+    var key = document.getElementById('own-key').value;
+    out = vigenere(text, key, true);
+  }
+  document.getElementById('own-output').textContent = out || 'Your encrypted message will appear here.';
+}
+function copyOwn() {
+  var text = document.getElementById('own-output').textContent;
+  var confirm = document.getElementById('copy-confirm');
+  if (text === 'Your encrypted message will appear here.') return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() { showCopyConfirm(); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyConfirm();
+  }
+}
+function showCopyConfirm() {
+  var el = document.getElementById('copy-confirm');
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2000);
+}
+</script>
+</body>
+</html>
